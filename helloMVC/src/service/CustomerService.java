@@ -9,18 +9,17 @@ import model.Customer;
 
 public class CustomerService {
 	private Map<String,Customer> customerMap;
+	private static final CustomerService instance = new CustomerService();
 
-	public CustomerService() {
+	private CustomerService() {
 		customerMap = new HashMap<String,Customer>();
 		
-		addCustomer(new Customer("id001","alice","alice@naver.com"));
-		addCustomer(new Customer("id002","bob","bob@naver.com"));
-		addCustomer(new Customer("id003","charlie","charlie@naver.com"));
-		addCustomer(new Customer("id004","david","david@naver.com"));
-		addCustomer(new Customer("id005","trudy","trudy@naver.com"));
+	}
+	public static CustomerService getInstance() {
+		return instance;
 	}
 	
-	private void addCustomer(Customer customer) {
+	public void addCustomer(Customer customer) {
 		customerMap.put(customer.getId(),customer);
 	}
 	
@@ -30,7 +29,15 @@ public class CustomerService {
 		else
 			return null;
 	}
-	
+	public Customer login(String id,String password) {
+		//TODO customer 객체에서 고객 아이디와 비밀번호를 가져와서 만약 같다면 customer객체 리턴.
+		//아니면 null리턴.
+		Customer customer = customerMap.get(id);
+		if(customer==null||!customer.getPassword().equals(password))
+			return null;
+		else
+			return customer;
+	}
 	public List<Customer> getAllCustomers(){
 		List<Customer> customerList = new ArrayList<Customer>(customerMap.values());
 		return customerList;

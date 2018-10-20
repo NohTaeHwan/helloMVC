@@ -1,9 +1,7 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,47 +13,42 @@ import model.Customer;
 import service.CustomerService;
 
 /**
- * Servlet implementation class DoLogin
+ * Servlet implementation class DoRegister
  */
-@WebServlet("/doLogin")
-public class DoLogin extends HttpServlet {
+@WebServlet("/doRegister")
+public class DoRegister extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DoLogin() {
+    public DoRegister() {
         super();
         // TODO Auto-generated constructor stub
     }
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		
 		String id = request.getParameter("id");
 		String password = request.getParameter("password");
-	
-		CustomerService service = (CustomerService)CustomerService.getInstance();
-		Customer customer = service.login(id,password);//구현해야함
+		String name = request.getParameter("name");
+		String gender = request.getParameter("gender");
+		String email = request.getParameter("email");
+		
+		CustomerService service = CustomerService.getInstance();
+		Customer customer = new Customer(id,password,name,gender,email);
+		service.addCustomer(customer);
 		
 		String page;
 		
-		if(customer==null) {
-			page="/view/loginFail.jsp";
-			request.setAttribute("id", id);
-		}
-		else {
-			page="/view/loginSuccess.jsp";
-			request.setAttribute("customer", customer);
-		}
-	
+		page = "/view/registerSuccess.jsp";
+		request.setAttribute("customer", customer);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
-		dispatcher.forward(request, response);
-			
+		dispatcher.forward(request, response);	
 	}
 
 }
